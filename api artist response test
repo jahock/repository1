@@ -1,0 +1,67 @@
+namespace finalProjectTest
+{
+    class Program
+    {
+
+        static void Main()
+        {
+            MainAsync().Wait();
+        }
+
+        static async Task MainAsync()
+	 {
+            searchArtist myArtist = new searchArtist();
+
+            Console.WriteLine("enter artist to search");
+
+            myArtist.Artist = Console.ReadLine();
+            Console.WriteLine(); 
+
+      // Create a New HttpClient object.
+      HttpClient client = new HttpClient();
+
+      // Call asynchronous network methods in a try/catch block to handle exceptions 
+      try	
+      {
+          HttpResponseMessage response = await client.GetAsync("https://partner.api.beatsmusic.com/v1/api/search?q=Queen&type=album&client_id=xn5c9z43vfn3cxvyx2yv6vac");
+         response.EnsureSuccessStatusCode();
+         string responseBody = await response.Content.ReadAsStringAsync();
+         // Above three lines can be replaced with new helper method below 
+         // string responseBody = await client.GetStringAsync(uri);
+
+         Console.WriteLine(responseBody);
+      }  
+      catch(HttpRequestException e)
+      {
+         Console.WriteLine("\nException Caught!");	
+         Console.WriteLine("Message :{0} ",e.Message);
+      }
+
+      Console.ReadLine();
+      // Need to call dispose on the HttpClient object 
+      // when done using it, so the app doesn't leak resources
+   }
+    }
+     class searchArtist
+    {
+        private string artist;
+
+        public string Artist { get; set; }
+    }
+    class searchdomain
+    {
+        private string domain;
+
+        public string Domain
+        {
+            get
+            {
+                return domain;
+            }
+            set
+            {
+                domain = value;
+            }
+        }
+    }
+}
